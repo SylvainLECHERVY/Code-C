@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <cryptopp/sha.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/hex.h>
+
+std::string hashPassword(const std::string& password) {
+    CryptoPP::SHA256 hash;
+    byte digest[CryptoPP::SHA256::DIGESTSIZE];
+
+    hash.CalculateDigest(digest, (byte*)password.data(), password.size());
+
+    std::string hashedPassword;
+    CryptoPP::HexEncoder encoder;
+    encoder.Attach(new CryptoPP::StringSink(hashedPassword));
+    encoder.Put(digest, sizeof(digest));
+    encoder.MessageEnd();
+
+    return hashedPassword;
+}
+
+bool verifyPassword(const std::string& hashedPassword, const std::string& password) {
+    std::string newHashedPassword = hashPassword(password);
+    return newHashedPassword == hashedPassword;
+}
+
+class Database {
+public:
+    void registerUser(const std::string& username, const std::string& password) {
+        if (users.find(username) != users.end()) {
+            throw std::runtime_error("Username already exists.");
+        }
+        users[username] = hashPassword(password);
+    }
+
+    bool login(const std::string& username, const std::string& password) {
+        auto it = users.find(username);
+        if (it == users.end()) {
+            return false;
+        }
+        return verifyPassword(it->second, password);
+    }
+
+private:
+    std::map<std::string, std::string> users;
+};
+
+int main() {
+    Database db;
+
+    // Register users
+    db.registerUser("user1", "password1");
+    db.registerUser("user2", "password2");
+
+    std::string inputUsername, inputPassword;
+    std::cout << "Enter your username: ";
+    std::cin >> inputUsername;
+    std::cout << "Enter your password: ";
+    std::cin >> inputPassword;
+
+    if (db.login(inputUsername, inputPassword)) {
+        std::cout << "Login successful!" << std::endl;
+    } else {
+        std::cout << "Login failed. Incorrect username or password." << std::endl;
+    }
+
+    return 0;
+}
