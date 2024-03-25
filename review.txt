@@ -1,0 +1,22 @@
+Le but de l'exercice était de recréer vous même une fonction de hashage
+
+Que signifie ctx ou encore digest_length?
+Que font les fonctions SHA256_Init, SHA256_Update et SHA256_Final?
+Comment savez si la fonction fait ce que souhaitez? Quelle est la logique que vous souhaitez appliquer à votre encryption?
+
+Evitez les commentaires superflus, "#define HASH_SIZE 64" est suffisant, pareil pour le nom de vos fonctions qui décrivent déja ce qu'elles font.
+
+Si l’utilisateur entre un mot de passe de plus de 49 caractères, cela débordera et
+il pourra écrire en mémoire à des endroits qu'il ne devait pas (ou propoquera une erreur par mesure de sécurité).
+D'ailleurs pourquoi 50?
+Il est recommandé d'utiliser fgets(testPassword, sizeof(testPassword), stdin); ou tout simplement une string c++
+
+D'une manière générale on préfère utiliser les méthodes qui viennent
+avec l'objet string de C++ afin de pouvoir produire du code sécurisé
+plus simplement qu'en C.
+
+D'une manière générale, n'utilisez pas des librairies si vous ne comprennez pas comment elles fonctionnent.
+Le but de l'exercice était justement de coder vous même un sha relativement basique pour ensuite pouvoir utiliser des librairies utilisant des algorithmes très complexes comme celle que vous avez utilisé en comprennant leurs fondamentaux.
+N'utilisez pas du code sans le comprendre car vous êtes responsable de ce que vous produisez.
+
+10/20
